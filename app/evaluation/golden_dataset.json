@@ -1,0 +1,291 @@
+[
+    {
+      "predicted": {
+        "intent": "inquiry",
+        "entities": ["enterprise pricing"],
+        "tool_calls": ["query_knowledge_base"],
+        "suggested_response_draft": "Our enterprise pricing starts at $499/month. Would you like a detailed quote?",
+        "confidence_score": 0.85
+      },
+      "expected": {
+        "intent": "inquiry",
+        "entities": ["enterprise pricing"],
+        "tool_calls": ["query_knowledge_base"],
+        "suggested_response_draft": "Happy to share! Our enterprise plan starts at $499/month.",
+        "confidence_score": 0.9
+      }
+    },
+    {
+      "predicted": {
+        "intent": "objection",
+        "entities": ["too expensive", "budget"],
+        "tool_calls": ["query_knowledge_base"],
+        "suggested_response_draft": "I understand — let me walk you through the value we deliver at that price.",
+        "confidence_score": 0.88
+      },
+      "expected": {
+        "intent": "objection",
+        "entities": ["too expensive", "budget constraints"],
+        "tool_calls": ["query_knowledge_base"],
+        "suggested_response_draft": "Totally fair — we often work with teams with tight budgets and can explore options.",
+        "confidence_score": 0.9
+      }
+    },
+    {
+      "predicted": {
+        "intent": "buying_signal",
+        "entities": ["demo", "availability"],
+        "tool_calls": ["fetch_prospect_details"],
+        "suggested_response_draft": "I can schedule a demo for tomorrow at 3 PM — does that work for you?",
+        "confidence_score": 0.95
+      },
+      "expected": {
+        "intent": "buying_signal",
+        "entities": ["demo", "calendar"],
+        "tool_calls": ["fetch_prospect_details"],
+        "suggested_response_draft": "Let's get you a demo — is tomorrow at 3 PM good for you?",
+        "confidence_score": 0.94
+      }
+    },
+    {
+      "predicted": {
+        "intent": "clarification_request",
+        "entities": ["integration", "Salesforce"],
+        "tool_calls": ["query_knowledge_base"],
+        "suggested_response_draft": "Yes, we support native Salesforce integration with no-code setup.",
+        "confidence_score": 0.87
+      },
+      "expected": {
+        "intent": "clarification_request",
+        "entities": ["Salesforce integration"],
+        "tool_calls": ["query_knowledge_base"],
+        "suggested_response_draft": "Absolutely! We integrate directly with Salesforce out of the box.",
+        "confidence_score": 0.89
+      }
+    },
+    {
+      "predicted": {
+        "intent": "objection",
+        "entities": ["switching costs"],
+        "tool_calls": ["query_knowledge_base"],
+        "suggested_response_draft": "We offer migration support to help reduce switching costs.",
+        "confidence_score": 0.83
+      },
+      "expected": {
+        "intent": "objection",
+        "entities": ["migration", "switching costs"],
+        "tool_calls": ["query_knowledge_base"],
+        "suggested_response_draft": "Switching can be tough — that’s why we include free migration help.",
+        "confidence_score": 0.85
+      }
+    },
+    {
+      "predicted": {
+        "intent": "inquiry",
+        "entities": ["team size limits"],
+        "tool_calls": ["query_knowledge_base"],
+        "suggested_response_draft": "There are no strict limits — our plans scale with your team size.",
+        "confidence_score": 0.84
+      },
+      "expected": {
+        "intent": "inquiry",
+        "entities": ["user cap", "team size"],
+        "tool_calls": ["query_knowledge_base"],
+        "suggested_response_draft": "You can add as many users as needed — no cap on team size.",
+        "confidence_score": 0.9
+      }
+    },
+    {
+      "predicted": {
+        "intent": "buying_signal",
+        "entities": ["payment terms"],
+        "tool_calls": ["fetch_prospect_details"],
+        "suggested_response_draft": "Our standard terms are net-30, but we can adjust for larger contracts.",
+        "confidence_score": 0.9
+      },
+      "expected": {
+        "intent": "buying_signal",
+        "entities": ["payment terms"],
+        "tool_calls": ["fetch_prospect_details"],
+        "suggested_response_draft": "Happy to clarify — we typically do net-30 but have flexibility.",
+        "confidence_score": 0.92
+      }
+    },
+    {
+      "predicted": {
+        "intent": "inquiry",
+        "entities": ["security", "SOC2"],
+        "tool_calls": ["query_knowledge_base"],
+        "suggested_response_draft": "Yes, we are fully SOC2 compliant and follow strict security protocols.",
+        "confidence_score": 0.96
+      },
+      "expected": {
+        "intent": "inquiry",
+        "entities": ["SOC2", "security"],
+        "tool_calls": ["query_knowledge_base"],
+        "suggested_response_draft": "Yes — we are SOC2 Type II certified and undergo regular audits.",
+        "confidence_score": 0.95
+      }
+    },
+    {
+      "predicted": {
+        "intent": "objection",
+        "entities": ["feature missing", "workflow"],
+        "tool_calls": ["query_knowledge_base"],
+        "suggested_response_draft": "Thanks for the feedback! We're working on that feature right now.",
+        "confidence_score": 0.75
+      },
+      "expected": {
+        "intent": "objection",
+        "entities": ["feature gap", "workflow"],
+        "tool_calls": ["query_knowledge_base"],
+        "suggested_response_draft": "Totally understand — we’re actively building that and can share a timeline.",
+        "confidence_score": 0.78
+      }
+    },
+    {
+      "predicted": {
+        "intent": "clarification_request",
+        "entities": ["onboarding", "support"],
+        "tool_calls": ["query_knowledge_base"],
+        "suggested_response_draft": "Yes, we offer white-glove onboarding and 24/7 support.",
+        "confidence_score": 0.88
+      },
+      "expected": {
+        "intent": "clarification_request",
+        "entities": ["onboarding", "support"],
+        "tool_calls": ["query_knowledge_base"],
+        "suggested_response_draft": "We provide onboarding assistance and 24/7 live support.",
+        "confidence_score": 0.9
+      }
+    },
+    {
+      "predicted": {
+        "intent": "buying_signal",
+        "entities": ["trial"],
+        "tool_calls": [],
+        "suggested_response_draft": "You can start a free trial at any time — no credit card needed.",
+        "confidence_score": 0.93
+      },
+      "expected": {
+        "intent": "buying_signal",
+        "entities": ["free trial"],
+        "tool_calls": [],
+        "suggested_response_draft": "Feel free to begin your free trial — no card required!",
+        "confidence_score": 0.92
+      }
+    },
+    {
+      "predicted": {
+        "intent": "inquiry",
+        "entities": ["mobile support"],
+        "tool_calls": ["query_knowledge_base"],
+        "suggested_response_draft": "Yes, we have iOS and Android apps available.",
+        "confidence_score": 0.91
+      },
+      "expected": {
+        "intent": "inquiry",
+        "entities": ["mobile apps"],
+        "tool_calls": ["query_knowledge_base"],
+        "suggested_response_draft": "Yes — our app is available for iOS and Android.",
+        "confidence_score": 0.93
+      }
+    },
+    {
+      "predicted": {
+        "intent": "objection",
+        "entities": ["vendor lock-in"],
+        "tool_calls": ["query_knowledge_base"],
+        "suggested_response_draft": "Good point — our platform is API-first and easy to migrate away from.",
+        "confidence_score": 0.87
+      },
+      "expected": {
+        "intent": "objection",
+        "entities": ["vendor lock-in", "exit strategy"],
+        "tool_calls": ["query_knowledge_base"],
+        "suggested_response_draft": "You're right to ask — we support open standards and easy exports.",
+        "confidence_score": 0.88
+      }
+    },
+    {
+      "predicted": {
+        "intent": "clarification_request",
+        "entities": ["reporting", "dashboards"],
+        "tool_calls": ["query_knowledge_base"],
+        "suggested_response_draft": "Yes — you can customize all dashboards and export reports as needed.",
+        "confidence_score": 0.91
+      },
+      "expected": {
+        "intent": "clarification_request",
+        "entities": ["analytics", "dashboards"],
+        "tool_calls": ["query_knowledge_base"],
+        "suggested_response_draft": "You’ll get full control over dashboard layouts and export formats.",
+        "confidence_score": 0.9
+      }
+    },
+    {
+      "predicted": {
+        "intent": "inquiry",
+        "entities": ["integrations", "Zapier"],
+        "tool_calls": ["query_knowledge_base"],
+        "suggested_response_draft": "We support Zapier and over 1000 other integrations.",
+        "confidence_score": 0.94
+      },
+      "expected": {
+        "intent": "inquiry",
+        "entities": ["Zapier", "integration list"],
+        "tool_calls": ["query_knowledge_base"],
+        "suggested_response_draft": "Zapier is fully supported, along with 1000+ other apps.",
+        "confidence_score": 0.96
+      }
+    },
+    {
+      "predicted": {
+        "intent": "objection",
+        "entities": ["steep learning curve"],
+        "tool_calls": ["query_knowledge_base"],
+        "suggested_response_draft": "We’ve heard that before — and made it super easy to onboard.",
+        "confidence_score": 0.79
+      },
+      "expected": {
+        "intent": "objection",
+        "entities": ["learning curve", "training"],
+        "tool_calls": ["query_knowledge_base"],
+        "suggested_response_draft": "You're not alone — our onboarding makes it easy to get started quickly.",
+        "confidence_score": 0.82
+      }
+    },
+    {
+      "predicted": {
+        "intent": "clarification_request",
+        "entities": ["feature roadmap"],
+        "tool_calls": [],
+        "suggested_response_draft": "Happy to share our roadmap — can I email it to you?",
+        "confidence_score": 0.84
+      },
+      "expected": {
+        "intent": "clarification_request",
+        "entities": ["roadmap"],
+        "tool_calls": [],
+        "suggested_response_draft": "Absolutely — I’ll send our feature roadmap over shortly.",
+        "confidence_score": 0.85
+      }
+    },
+    {
+      "predicted": {
+        "intent": "buying_signal",
+        "entities": ["purchase timeline"],
+        "tool_calls": ["fetch_prospect_details"],
+        "suggested_response_draft": "Do you have a target timeline for rollout?",
+        "confidence_score": 0.89
+      },
+      "expected": {
+        "intent": "buying_signal",
+        "entities": ["timeline", "go-live"],
+        "tool_calls": ["fetch_prospect_details"],
+        "suggested_response_draft": "When are you hoping to go live with the new solution?",
+        "confidence_score": 0.91
+      }
+    }
+  ]
+  

@@ -1,0 +1,17 @@
+{
+    "prospect_123": {
+      "name": "Jane Smith",
+      "company": "TechNova",
+      "lead_score": 87,
+      "past_interactions": ["Demo requested on May 1", "Asked about pricing on May 10"],
+      "technologies_used": ["Salesforce", "Zapier"]
+    },
+    "prospect_456": {
+      "name": "Carlos Ruiz",
+      "company": "Greenware",
+      "lead_score": 72,
+      "past_interactions": ["Webinar attendee", "Mentioned interest in integrations"],
+      "technologies_used": ["HubSpot", "Slack"]
+    }
+  }
+  
