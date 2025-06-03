@@ -1,0 +1,9 @@
+{
+  "name": "ai-sales-agent-api",
+  "description": "AI Sales Agent FastAPI backend",
+  "main": "main.py",
+  "engine": "python3.10",
+  "web": {
+    "port": 8000
+  }
+}
