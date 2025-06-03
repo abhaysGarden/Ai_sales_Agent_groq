@@ -1,6 +1,6 @@
 import streamlit as st
 import requests
-from app.models.schemas import ProcessMessageRequest
+import datetime
 
 st.set_page_config(page_title="AI Sales Assistant", page_icon="🤖")
 st.title("🧠 AI Sales Assistant")
@@ -11,12 +11,17 @@ if "messages" not in st.session_state:
 
 # Display chat history
 for msg in st.session_state.messages:
-    with st.chat_message(msg["role"]):
+    with st.chat_message(msg["sender"]):
         st.markdown(msg["content"])
 
 # User input
 if prompt := st.chat_input("Type your message here..."):
-    st.session_state.messages.append({"role": "user", "content": prompt})
+    st.session_state.messages.append({
+        "sender": "user",
+        "content": prompt,
+        "timestamp": datetime.datetime.utcnow().isoformat()
+    })
+
     with st.chat_message("user"):
         st.markdown(prompt)
 
@@ -25,27 +30,21 @@ if prompt := st.chat_input("Type your message here..."):
         message_placeholder = st.empty()
         message_placeholder.markdown("Thinking...")
 
-    # --- ✅ Sanitize and prepare payload ---
+    # Prepare payload for FastAPI
     try:
-        conversation_history = []
-        for msg in st.session_state.messages:
-            conversation_history.append({
-                "role": str(msg.get("role", "")),
-                "content": str(msg.get("content", ""))
-            })
+        payload = {
+            "prospect_id": "demo_user",
+            "conversation_history": st.session_state.messages,
+            "current_prospect_message": {
+                "sender": "user",
+                "content": prompt,
+                "timestamp": datetime.datetime.utcnow().isoformat()
+            }
+        }
 
-        current_message = str(prompt)
-
-        request_payload = ProcessMessageRequest(
-            prospect_id="demo_user",
-            conversation_history=conversation_history,
-            current_message=current_message
-        ).dict()
-
-        # --- ✅ Make backend API call ---
         response = requests.post(
             "http://localhost:8000/process_message",
-            json=request_payload,
+            json=payload,
             timeout=30
         )
         response.raise_for_status()
@@ -58,4 +57,9 @@ if prompt := st.chat_input("Type your message here..."):
 
     # Show assistant reply
     message_placeholder.markdown(assistant_reply)
-    st.session_state.messages.append({"role": "assistant", "content": assistant_reply})
+
+    st.session_state.messages.append({
+        "sender": "assistant",
+        "content": assistant_reply,
+        "timestamp": datetime.datetime.utcnow().isoformat()
+    })
