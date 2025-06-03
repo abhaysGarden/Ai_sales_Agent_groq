@@ -2,7 +2,7 @@ import streamlit as st
 import datetime
 import asyncio
 
-from app.llm_orchestrator import process_message_pipeline
+from app.core.llm_orchestrator import process_message_pipeline
 from app.models.schemas import Message, ProcessMessageRequest
 
 st.set_page_config(page_title="AI Sales Assistant", page_icon="🤖")
