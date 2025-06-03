@@ -1,3 +1,5 @@
+groq
+streamlit
 fastapi
 uvicorn
 openai
