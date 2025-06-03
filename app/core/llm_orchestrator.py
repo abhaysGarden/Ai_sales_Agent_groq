@@ -1,16 +1,17 @@
 import os
 import json
-from groq import AsyncGroq
+import asyncio
 from typing import List
+from groq import AsyncGroq
+from dotenv import load_dotenv
 from app.models.schemas import (
     Message, ProcessMessageRequest, ProcessMessageResponse,
     AnalysisResult, ToolUsageLogEntry
 )
 from app.core.tools import KnowledgeAugmentationTool
-from dotenv import load_dotenv
+
 load_dotenv()
 
-# Initialize Groq client with environment variables
 client = AsyncGroq(api_key=os.getenv("GROQ_API_KEY"))
 model_name = os.getenv("GROQ_MODEL", "mixtral-8x7b-32768")
 temperature = float(os.getenv("GROQ_TEMPERATURE", "0.3"))
@@ -53,7 +54,6 @@ Return in JSON format:
         tool_usage_log = []
         retrieved_knowledge = []
 
-        # CRM Lookup
         if request.prospect_id:
             crm_data = self.tool.fetch_prospect_details(request.prospect_id)
             tool_usage_log.append(ToolUsageLogEntry(
@@ -64,7 +64,6 @@ Return in JSON format:
             ))
             retrieved_knowledge.append(f"CRM Data: {crm_data}")
 
-        # Knowledge base query
         if analysis.intent in ["objection", "clarification", "inquiry"]:
             query_text = f"{request.current_prospect_message} | Entities: {', '.join(analysis.entities)}"
             kb_result = self.tool.query_knowledge_base(query_text)
@@ -76,7 +75,6 @@ Return in JSON format:
             ))
             retrieved_knowledge.append("Knowledge Base Results:\n" + "\n".join([doc["text"] for doc in kb_result]))
 
-        # Synthesize response
         final_response = await self.synthesize_response(request, analysis, retrieved_knowledge)
 
         return ProcessMessageResponse(
@@ -144,5 +142,5 @@ Output in JSON:
 
 orchestrator = LLMOrchestrator()
 
-async def process_message_pipeline(request: ProcessMessageRequest) -> ProcessMessageResponse:
-    return await orchestrator.process(request)
+def process_message_pipeline(request: ProcessMessageRequest) -> ProcessMessageResponse:
+    return asyncio.run(orchestrator.process(request))
