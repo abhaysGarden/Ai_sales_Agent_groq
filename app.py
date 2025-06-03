@@ -9,54 +9,69 @@ from app.models.schemas import Message, ProcessMessageRequest
 st.set_page_config(page_title="AI Sales Assistant", page_icon="🤖")
 st.title("🧠 AI Sales Assistant")
 
-# Initialize chat history with correct Message fields
+# Initialize chat history
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# Show chat messages
+# Display chat history
 for msg in st.session_state.messages:
     with st.chat_message(msg["sender"]):
         st.markdown(msg["content"])
 
 # User input
 if prompt := st.chat_input("Type your message here..."):
-    timestamp = datetime.datetime.utcnow().isoformat()
-
-    # Add user message to history with correct 'sender' literal: 'prospect'
-    user_msg = {
-        "sender": "prospect",  # must be 'prospect' or 'agent' per your model
+    # Record user message in session
+    st.session_state.messages.append({
+        "sender": "user",
         "content": prompt,
-        "timestamp": timestamp
-    }
-    st.session_state.messages.append(user_msg)
+        "timestamp": datetime.datetime.utcnow().isoformat()
+    })
 
-    with st.chat_message("prospect"):
+    with st.chat_message("user"):
         st.markdown(prompt)
 
-    # Prepare ProcessMessageRequest payload
-    request_data = ProcessMessageRequest(
-        prospect_id="demo_user",
-        conversation_history=[Message(**m) for m in st.session_state.messages],
-        current_prospect_message=Message(**user_msg)
-    )
+    with st.chat_message("assistant"):
+        message_placeholder = st.empty()
+        message_placeholder.markdown("Thinking...")
 
-    # Show loading indicator and run async orchestrator call
-    with st.chat_message("agent"):
-        placeholder = st.empty()
-        placeholder.markdown("Thinking...")
+    # Normalize sender names for model input
+    def normalize_sender(sender):
+        return "prospect" if sender == "user" else "agent"
 
-        try:
-            response = asyncio.run(process_message_pipeline(request_data))
-            assistant_reply = response.suggested_response_draft
+    try:
+        # Format messages into pydantic schema
+        conversation_history = [
+            Message(
+                sender=normalize_sender(m["sender"]),
+                content=m["content"],
+                timestamp=m["timestamp"]
+            )
+            for m in st.session_state.messages
+        ]
 
-        except Exception as e:
-            assistant_reply = f"❌ Error: {e}"
+        user_msg = Message(
+            sender="prospect",
+            content=prompt,
+            timestamp=datetime.datetime.utcnow().isoformat()
+        )
 
-        placeholder.markdown(assistant_reply)
+        request_data = ProcessMessageRequest(
+            prospect_id="demo_user",
+            conversation_history=conversation_history,
+            current_prospect_message=user_msg
+        )
 
-    # Add assistant reply to history with 'agent' sender
+        # Run orchestrator directly (no FastAPI call)
+        response = asyncio.run(process_message_pipeline(request_data))
+        assistant_reply = response.suggested_response_draft
+
+    except Exception as e:
+        assistant_reply = f"❌ Error: {e}"
+
+    # Show assistant reply and store in session
+    message_placeholder.markdown(assistant_reply)
     st.session_state.messages.append({
-        "sender": "agent",
+        "sender": "assistant",
         "content": assistant_reply,
         "timestamp": datetime.datetime.utcnow().isoformat()
     })
