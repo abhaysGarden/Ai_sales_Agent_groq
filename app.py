@@ -1,6 +1,9 @@
 import streamlit as st
-import requests
 import datetime
+import asyncio
+
+from app.llm_orchestrator import process_message_pipeline
+from app.models.schemas import Message, ProcessMessageRequest
 
 st.set_page_config(page_title="AI Sales Assistant", page_icon="🤖")
 st.title("🧠 AI Sales Assistant")
@@ -16,10 +19,12 @@ for msg in st.session_state.messages:
 
 # User input
 if prompt := st.chat_input("Type your message here..."):
+    timestamp = datetime.datetime.utcnow().isoformat()
+    
     st.session_state.messages.append({
         "sender": "user",
         "content": prompt,
-        "timestamp": datetime.datetime.utcnow().isoformat()
+        "timestamp": timestamp
     })
 
     with st.chat_message("user"):
@@ -30,27 +35,18 @@ if prompt := st.chat_input("Type your message here..."):
         message_placeholder = st.empty()
         message_placeholder.markdown("Thinking...")
 
-    # Prepare payload for FastAPI
     try:
-        payload = {
-            "prospect_id": "demo_user",
-            "conversation_history": st.session_state.messages,
-            "current_prospect_message": {
-                "sender": "user",
-                "content": prompt,
-                "timestamp": datetime.datetime.utcnow().isoformat()
-            }
-        }
-
-        response = requests.post(
-            "http://localhost:8000/process_message",
-            json=payload,
-            timeout=30
+        # Build ProcessMessageRequest schema
+        history_objs = [Message(**msg) for msg in st.session_state.messages if msg["sender"] in ["user", "assistant"]]
+        request = ProcessMessageRequest(
+            prospect_id="demo_user",
+            conversation_history=history_objs[:-1],
+            current_prospect_message=history_objs[-1]
         )
-        response.raise_for_status()
-        data = response.json()
 
-        assistant_reply = data.get("suggested_response", "⚠️ No response generated.")
+        # Call orchestrator (sync wrapper)
+        response = asyncio.run(process_message_pipeline(request))
+        assistant_reply = response.suggested_response_draft
 
     except Exception as e:
         assistant_reply = f"❌ Error: {e}"
