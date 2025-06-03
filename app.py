@@ -1,6 +1,7 @@
 import streamlit as st
 import datetime
 import asyncio
+import requests
 
 from app.core.llm_orchestrator import process_message_pipeline
 from app.models.schemas import Message, ProcessMessageRequest
@@ -20,33 +21,42 @@ for msg in st.session_state.messages:
 # User input
 if prompt := st.chat_input("Type your message here..."):
     timestamp = datetime.datetime.utcnow().isoformat()
-    
+
     st.session_state.messages.append({
-        "sender": "user",
+        "sender": "prospect",  # Changed from 'user' to 'prospect'
         "content": prompt,
         "timestamp": timestamp
     })
 
-    with st.chat_message("user"):
+    with st.chat_message("prospect"):
         st.markdown(prompt)
 
     # Assistant response placeholder
-    with st.chat_message("assistant"):
+    with st.chat_message("agent"):  # Changed from 'assistant' to 'agent'
         message_placeholder = st.empty()
         message_placeholder.markdown("Thinking...")
 
+    # Prepare payload for FastAPI
     try:
-        # Build ProcessMessageRequest schema
-        history_objs = [Message(**msg) for msg in st.session_state.messages if msg["sender"] in ["user", "assistant"]]
-        request = ProcessMessageRequest(
-            prospect_id="demo_user",
-            conversation_history=history_objs[:-1],
-            current_prospect_message=history_objs[-1]
-        )
+        payload = {
+            "prospect_id": "demo_user",
+            "conversation_history": st.session_state.messages,
+            "current_prospect_message": {
+                "sender": "prospect",  # Changed from 'user' to 'prospect'
+                "content": prompt,
+                "timestamp": timestamp
+            }
+        }
 
-        # Call orchestrator (sync wrapper)
-        response = asyncio.run(process_message_pipeline(request))
-        assistant_reply = response.suggested_response_draft
+        response = requests.post(
+            "http://localhost:8000/process_message",
+            json=payload,
+            timeout=30
+        )
+        response.raise_for_status()
+        data = response.json()
+
+        assistant_reply = data.get("suggested_response_draft", "⚠️ No response generated.")
 
     except Exception as e:
         assistant_reply = f"❌ Error: {e}"
@@ -55,7 +65,7 @@ if prompt := st.chat_input("Type your message here..."):
     message_placeholder.markdown(assistant_reply)
 
     st.session_state.messages.append({
-        "sender": "assistant",
+        "sender": "agent",  # Changed from 'assistant' to 'agent'
         "content": assistant_reply,
         "timestamp": datetime.datetime.utcnow().isoformat()
     })
