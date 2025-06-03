@@ -48,7 +48,7 @@ if prompt := st.chat_input("Type your message here..."):
     }
 
     try:
-        response = requests.post("http://localhost:8000/agent/route", json=payload, timeout=30)
+        response = requests.post("http://localhost:8000/process_message", json=payload, timeout=30)
         response.raise_for_status()
         data = response.json()
         assistant_reply = data.get("suggested_response_draft", "I'm sorry, I couldn't generate a response.")
